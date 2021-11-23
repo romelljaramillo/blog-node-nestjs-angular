@@ -40,15 +40,29 @@ export class UserService {
   findAll(): Observable<AxiosResponse<User[]>> {
     try {
       return this.http.get(this.urlUsers)
-        .pipe(map((resp) => resp.data));
+        .pipe(map((resp) => {
+          console.log(resp.data);
+          return resp.data
+        }));
     } catch (error) {
       console.error(error);
     }
   }
 
   findOne(id: number): Observable<AxiosResponse<User>> {
-    return this.http.get(this.urlUsers, { params: { id: id } })
-      .pipe(map((resp) => resp.data));
+      try {
+        return this.http.get(this.urlUsers, { params: { id: id } })
+          .pipe(map((resp) => {
+            if (resp.status == 200 && resp.data.length === 0) {
+              throw new NotFoundException('The requested record does not exist');
+            } else {
+              return resp.data[0];
+            }
+          }
+          ));
+      } catch (error) {
+        console.error(error);
+      }
   }
 
   update(id: number, updateUserDto: UpdateUserDto): Observable<AxiosResponse<User>> {

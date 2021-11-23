@@ -1,11 +1,12 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { HttpService } from '@nestjs/axios';
 import { CreatePostDto, UpdatePostDto } from './dto/post.dto';
-import { map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 import { ConfigType } from '@nestjs/config';
 import config from '../config';
-import { Post } from './interfaces/post.interface';
+import { Posts } from './interfaces/post.interface';
 
 @Injectable()
 export class PostService {
@@ -27,8 +28,8 @@ export class PostService {
   ) {
     this.urlPosts = this.configService.api.posts;
   }
-  
-  create(createPostDto: CreatePostDto): Observable<AxiosResponse<Post>> {
+
+  create(createPostDto: CreatePostDto): Observable<AxiosResponse<Posts>> {
     try {
       return this.http.post(this.urlPosts, createPostDto, this.requestConfig)
         .pipe(map((resp) => resp.data));
@@ -37,21 +38,35 @@ export class PostService {
     }
   }
 
-  findAll(): Observable<AxiosResponse<Post[]>> {
+  findAll(): Observable<AxiosResponse<Posts[]>> {
     try {
       return this.http.get(this.urlPosts)
-        .pipe(map((resp) => resp.data));
+        .pipe(map((resp) => {
+          console.log(resp.data);
+          return resp.data
+        }));
     } catch (error) {
       console.error(error);
     }
   }
 
-  findOne(id: number) {
-    return this.http.get(this.urlPosts, { params: { id: id } })
-      .pipe(map((resp) => resp.data));
+  findOne(id: number): Observable<AxiosResponse<Posts>> {
+    try {
+      return this.http.get(this.urlPosts, { params: { id: id } })
+        .pipe(map((resp) => {
+          if (resp.status == 200 && resp.data.length === 0) {
+            throw new NotFoundException('The requested record does not exist');
+          } else {
+            return resp.data[0];
+          }
+        }
+        ));
+    } catch (error) {
+      console.error(error);
+    }
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
+  update(id: number, updatePostDto: UpdatePostDto): Observable<any> {
     return this.http.put(this.urlPosts + '/' + id, updatePostDto, this.requestConfig)
       .pipe(map((resp) => resp.data));
   }

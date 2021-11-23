@@ -2,9 +2,11 @@ import { Controller, Get, Post, Body, Param, Delete, Put, ParseIntPipe } from '@
 import { PostService } from './post.service';
 import { CreatePostDto, UpdatePostDto } from './dto/post.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { Posts } from './interfaces/post.interface';
+import { map } from 'rxjs';
 
-@ApiTags('post')
-@Controller('post')
+@ApiTags('posts')
+@Controller('posts')
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
@@ -20,7 +22,8 @@ export class PostController {
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.postService.findOne(id);
+    const resp = this.postService.findOne(id);
+    return resp;
   }
 
   @Put(':id')
