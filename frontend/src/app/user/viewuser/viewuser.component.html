@@ -1,0 +1,16 @@
+<ion-card>
+  <ion-card-header>
+    <ion-card-subtitle>
+      <ion-card-subtitle>Username: 
+        <ion-router-link color="secondary" routerLink="{{ user.id }}">{{ user.username }}</ion-router-link>
+      </ion-card-subtitle>
+    </ion-card-subtitle>
+    <ion-card-title>{{ user.name }} </ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    <p>{{ user.email }}</p>
+    <p>{{ user.phone }}</p>
+    <p>{{ user.website }}</p>
+    <ion-router-link color="secondary" routerLink="{{ user.id }}">ver más</ion-router-link>
+  </ion-card-content>
+</ion-card>

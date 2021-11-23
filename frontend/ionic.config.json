@@ -1,0 +1,7 @@
+{
+  "name": "forntend",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

@@ -1,0 +1,13 @@
+<ion-content [fullscreen]="true">
+  <app-header [title]="title"></app-header>
+
+  <app-search *ngIf="users" (textSearch)="searchUser($event)"></app-search>
+
+  <app-viewusers *ngIf="users" [users]="users" [textSearch]="textS"></app-viewusers>
+  <app-viewuser *ngIf="user" [user]="user"></app-viewuser>
+
+  <ion-infinite-scroll threshold="150px" (ionInfinite)="loadData( $event )">
+    <ion-infinite-scroll-content loadingSpinner="crescent" loadingText="Cargando data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>
