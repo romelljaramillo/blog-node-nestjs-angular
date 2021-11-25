@@ -1,5 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { HttpService } from '@nestjs/axios';
 import { CreatePostDto, UpdatePostDto } from './dto/post.dto';
 import { Observable } from 'rxjs';
@@ -7,6 +7,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { ConfigType } from '@nestjs/config';
 import config from '../config';
 import { Posts } from './interfaces/post.interface';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class PostService {
@@ -16,15 +17,13 @@ export class PostService {
   private requestConfig: AxiosRequestConfig = {
     headers: {
       'Content-Type': 'application/json; charset=UTF-8',
-    },
-    params: {
-      param1: 'YOUR_VALUE_HERE'
-    },
+    }
   };
 
   constructor(
     @Inject(config.KEY) private configService: ConfigType<typeof config>,
-    private http: HttpService
+    private http: HttpService,
+    private readonly userService: UserService,
   ) {
     this.urlPosts = this.configService.api.posts;
   }
@@ -39,31 +38,40 @@ export class PostService {
   }
 
   findAll(): Observable<AxiosResponse<Posts[]>> {
-    try {
-      return this.http.get(this.urlPosts)
-        .pipe(map((resp) => {
-          console.log(resp.data);
-          return resp.data
-        }));
-    } catch (error) {
-      console.error(error);
+    return this.http.get(this.urlPosts)
+      .pipe(map(resp => {
+        if (resp.status == 200 && resp.data.length === 0) {
+          throw new NotFoundException('The requested record does not exist');
+        } else {
+          return resp.data;
+        }
+      }
+      ));
+  }
+
+  findAllofUser(userId: number): Observable<AxiosResponse<Posts[]>> {
+    return this.http.get(this.urlPosts, { params: { userId: userId } })
+    .pipe(map((resp) => {
+      if (resp.status == 200 && resp.data.length === 0) {
+        throw new NotFoundException('The requested record does not exist');
+      } else {
+        return resp.data;
+      }
     }
+    ));
   }
 
   findOne(id: number): Observable<AxiosResponse<Posts>> {
-    try {
-      return this.http.get(this.urlPosts, { params: { id: id } })
-        .pipe(map((resp) => {
-          if (resp.status == 200 && resp.data.length === 0) {
-            throw new NotFoundException('The requested record does not exist');
-          } else {
-            return resp.data[0];
-          }
+    return this.http.get(this.urlPosts, { params: { id: id } })
+      .pipe(map((resp) => {
+        if (resp.status == 200 && resp.data.length === 0) {
+          throw new NotFoundException('The requested record does not exist');
+        } else {
+          return resp.data[0];
         }
-        ));
-    } catch (error) {
-      console.error(error);
-    }
+      }
+      ));
+
   }
 
   update(id: number, updatePostDto: UpdatePostDto): Observable<any> {

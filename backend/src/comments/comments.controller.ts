@@ -18,6 +18,12 @@ export class CommentsController {
     return this.commentsService.findAll();
   }
 
+  @Get(':postId/posts')
+  findAllofUser(@Param('postId', ParseIntPipe) postId: number) {
+    const resp = this.commentsService.findAllofPosts(postId);
+    return resp;
+  }
+
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.commentsService.findOne(+id);

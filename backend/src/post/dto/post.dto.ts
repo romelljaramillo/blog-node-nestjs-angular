@@ -1,5 +1,6 @@
 import { PartialType, ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString, IsPositive, IsInt } from 'class-validator';
+import { User } from 'src/user/interfaces/user.interface';
 
 export class CreatePostDto {
     @IsInt()

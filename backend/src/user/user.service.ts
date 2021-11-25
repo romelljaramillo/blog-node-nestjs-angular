@@ -1,7 +1,7 @@
-import { ConsoleLogger, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { HttpService } from '@nestjs/axios';
-import { AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { map, Observable } from 'rxjs';
 import { ConfigType } from '@nestjs/config';
 import config from '../config';
@@ -15,10 +15,7 @@ export class UserService {
   private requestConfig: AxiosRequestConfig = {
     headers: {
       'Content-Type': 'application/json; charset=UTF-8',
-    },
-    params: {
-      param1: 'YOUR_VALUE_HERE'
-    },
+    }
   };
 
   constructor(
@@ -41,7 +38,6 @@ export class UserService {
     try {
       return this.http.get(this.urlUsers)
         .pipe(map((resp) => {
-          console.log(resp.data);
           return resp.data
         }));
     } catch (error) {
