@@ -15,14 +15,4 @@ export class ViewpostsComponent implements OnInit {
   constructor() { }
   ngOnInit() {}
 
-
-  public renderUserName(post): string { 
-    for(let i = 0 ; i < this.users.length; i++) 
-      if(this.users[i].id == post.userId) 
-        return this.users[i].username;
-    
-    return '';
-
-  }
-
 }

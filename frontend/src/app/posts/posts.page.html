@@ -3,6 +3,8 @@
   
   <app-search *ngIf="posts" (textSearch)="searchPost($event)"></app-search>
 
+  <ion-button color="primary" (click)="createPosts()">Create posts</ion-button>
+
   <app-viewposts *ngIf="posts && users" [users]="users" [posts]="posts" [textSearch]="textS"></app-viewposts>
   <app-viewpost *ngIf="post && users" [users]="users" [post]="post"></app-viewpost>
 

@@ -2,7 +2,7 @@
   <ion-card-header>
     <ion-card-subtitle>
       <ion-card-subtitle>User: 
-        <ion-router-link color="secondary" routerLink="{{ post.id }}">{{ this.renderUserName(post) }}</ion-router-link>
+        <ion-router-link color="secondary" routerLink="{{ post.id }}">{{ renderUserName(post.userId) }}</ion-router-link>
       </ion-card-subtitle>
     </ion-card-subtitle>
     <ion-card-title>{{ post.title }} </ion-card-title>
@@ -10,5 +10,6 @@
   <ion-card-content>
     <p>{{ post.body }}</p>
     <ion-router-link color="secondary" routerLink="{{ post.id }}">ver más</ion-router-link>
+    <ion-button color="primary" (click)="editPosts(post.id)">Edit</ion-button>
   </ion-card-content>
 </ion-card>

@@ -12,6 +12,7 @@ import { ViewpostComponent } from './viewpost/viewpost.component';
 import { HeaderComponent } from '../header/header.component';
 import { SearchComponent } from '../search/search.component';
 import { PipesModule } from '../pipes/pipes.module';
+import { CreatepostComponent } from './createpost/createpost.component';
 
 @NgModule({
   imports: [
@@ -19,8 +20,9 @@ import { PipesModule } from '../pipes/pipes.module';
     FormsModule,
     IonicModule,
     PostsPageRoutingModule,
-    PipesModule
+    PipesModule,
+    FormsModule
   ],
-  declarations: [PostsPage, ViewpostsComponent, ViewpostComponent, HeaderComponent, SearchComponent]
+  declarations: [PostsPage, ViewpostsComponent, ViewpostComponent, HeaderComponent, SearchComponent, CreatepostComponent]
 })
 export class PostsPageModule {}

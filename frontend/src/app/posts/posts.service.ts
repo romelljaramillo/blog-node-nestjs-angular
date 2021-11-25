@@ -15,9 +15,9 @@ const apiUlrPost = environment.apiUlr + '/posts';
 export class PostsService {
   public cargando: boolean = false;
 
-  private options = { 
+  private options = {
     headers: new HttpHeaders({
-      'Content-type':'Application/json'
+      'Content-type': 'Application/json'
     })
   };
 
@@ -25,22 +25,36 @@ export class PostsService {
     private http: HttpClient
   ) { }
 
-  getAll():Observable<Posts[]> {
-    if ( this.cargando ) {
+  getAll(): Observable<Posts[]> {
+    if (this.cargando) {
       return of([]);
     }
 
     this.cargando = true;
-    return this.http.get<Posts[]>(apiUlrPost,this.options)
-      .pipe(map( (resp) => resp ),
-      tap( () => this.cargando = false)
-    );
+    return this.http.get<Posts[]>(apiUlrPost, this.options)
+      .pipe(map((resp) => resp),
+        tap(() => this.cargando = false)
+      );
   }
 
   getOne(id: number) {
-    return this.http.get<Posts>(`${apiUlrPost}/${id}`,this.options).pipe(
+    return this.http.get<Posts>(`${apiUlrPost}/${id}`, this.options).pipe(
       map(resp => resp),
-      catchError( err => of(null) )
+      catchError(err => of(null))
+    )
+  }
+
+  update(posts: Posts) {
+    return this.http.put<Posts>(`${apiUlrPost}/${posts.id}`, posts, this.options).pipe(
+      map(resp => resp),
+      catchError(err => of(null))
+    )
+  }
+
+  create(posts: Posts) {
+    return this.http.post<Posts>(`${apiUlrPost}`, posts, this.options).pipe(
+      map(resp => resp),
+      catchError(err => of(null))
     )
   }
 }
